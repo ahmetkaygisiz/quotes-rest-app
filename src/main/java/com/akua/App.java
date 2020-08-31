@@ -1,35 +1,29 @@
 package com.akua;
 
-import com.akua.domain.Quotes;
-import com.akua.repository.QuotesRepository;
+import com.akua.service.QuotesService;
 
 import static spark.Spark.*;
-// Default Port 4567
 
+// Default Port 4567
 public class App {
     public static void main(String[] args) {
-        //get("/random-quote", (req,rest) -> "HelloWorld!");
-        //get("/all-quote")
+        QuotesService service = new QuotesService();
+
         try{
-            QuotesRepository repository = new QuotesRepository();
+            //service.insertDataFromJsonFile("./src/main/resources/quotes.json");
 
-            // drop table
-           //repository.dropTable();
+            get("/random-quote", (req,res) -> {
+                res.type("application/json");
+                return service.getRandomQuote();
+            });
 
-            // create table
-            //repository.createTable();
+            get("/all", (req,res) -> {
+                res.type("application/json");
+                return service.getAllQuotes();
+            });
 
-            // Insert data
-            /*Quotes q = new Quotes();
-            q.setQuote("Benim adim hidir, elimden gelen budur.");
-            q.setAuthor("Anonim");
-            repository.insertData(q);
-             */
-
-            repository.getAllQuotes().forEach(i -> System.out.println(i));
-
-        }catch (Exception e){
-            e.printStackTrace();
+        } catch (Exception throwables) {
+            throwables.printStackTrace();
         }
     }
 }

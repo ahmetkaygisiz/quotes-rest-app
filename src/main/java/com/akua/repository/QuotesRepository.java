@@ -27,13 +27,14 @@ public class QuotesRepository {
     }
 
     public void insertData(Quotes quotes) throws SQLException {
-        String query =
-                "INSERT INTO QUOTES (quote, author) VALUES ('"+ quotes.getQuote()+"','"+quotes.getAuthor()+"');";
+        String query = "INSERT INTO QUOTES (quote, author) VALUES ('"
+                            + quotes.getQuote()+"','"
+                            + quotes.getAuthor()+"');";
 
         executeQuery(query);
     }
 
-    public List<Quotes> getAllQuotes() throws SQLException, InstantiationException, IllegalAccessException {
+    public List<Quotes> getAllQuotes() throws SQLException {
         String query = "SELECT * FROM QUOTES;";
 
         List<Quotes> list = getQueryResults(query);
@@ -41,16 +42,16 @@ public class QuotesRepository {
         return list;
     }
 
-    public Quotes getQuotesById(int id) throws SQLException {
-        String query = "SELECT * FROM QUOTES WHERE id=" + id;
+    public Quotes getRandomQuote() throws SQLException {
+        String query = "SELECT * FROM QUOTES ORDER BY RANDOM() LIMIT 1;";
 
         return getQuote(query);
     }
 
-    public void getQuotesCount(){
-        String query = "SELECT COUNT(*) FROM public.QUOTES;";
+    public Quotes getQuotesById(int id) throws SQLException {
+        String query = "SELECT * FROM QUOTES WHERE id=" + id;
 
-
+        return getQuote(query);
     }
 
     public void executeQuery(String query) throws SQLException {
@@ -61,10 +62,10 @@ public class QuotesRepository {
 
     public List<Quotes> getQueryResults(String query) throws SQLException{
         dm.connect();
-        List<Quotes> arr = dm.getQueryDataList(query);
+        List<Quotes> quotes = dm.getQueryDataList(query);
         dm.close();
 
-        return arr;
+        return quotes;
     }
 
     public Quotes getQuote(String query) throws SQLException {
@@ -74,6 +75,4 @@ public class QuotesRepository {
 
         return quotes;
     }
-
-
 }

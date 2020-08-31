@@ -2,7 +2,6 @@ package com.akua.database;
 
 import com.akua.database.configuration.PostgresDatabaseConnection;
 import com.akua.domain.Quotes;
-import org.h2.engine.Database;
 
 import java.sql.*;
 import java.util.ArrayList;
