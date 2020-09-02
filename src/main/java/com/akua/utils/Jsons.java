@@ -33,4 +33,8 @@ public class Jsons {
     public static <T> Collection<T> asCollection(JsonArray json, Type typeOf) {
         return gson.fromJson(json, typeOf);
     }
+
+    public static <T> T jsonToObject(String json, Type typeOf) {
+        return provider().fromJson(json, typeOf);
+    }
 }

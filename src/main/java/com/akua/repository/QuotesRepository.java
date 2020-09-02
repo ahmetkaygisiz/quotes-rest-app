@@ -1,9 +1,10 @@
 package com.akua.repository;
 
 import com.akua.database.DatabaseManager;
-import com.akua.domain.Quotes;
+import com.akua.domain.Quote;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class QuotesRepository {
@@ -26,33 +27,44 @@ public class QuotesRepository {
         executeQuery(query);
     }
 
-    public void insertData(Quotes quotes) throws SQLException {
-        String query = "INSERT INTO QUOTES (quote, author) VALUES ('"
-                            + quotes.getQuote()+"','"
-                            + quotes.getAuthor()+"');";
+    public void insertQuotes(Quote quotes) throws SQLException {
+        String query = "INSERT INTO QUOTES (quote, author) VALUES (?, ?)";
 
-        executeQuery(query);
+        executeQueryWithParams(query, quotes.toObjectArray());
     }
 
-    public List<Quotes> getAllQuotes() throws SQLException {
+    public List<Quote> getAllQuotes() throws SQLException {
         String query = "SELECT * FROM QUOTES;";
 
-        List<Quotes> list = getQueryResults(query);
+        List<Quote> list = getQueryResults(query);
 
         return list;
     }
 
-    public Quotes getRandomQuote() throws SQLException {
+    public Quote getRandomQuote() throws SQLException {
         String query = "SELECT * FROM QUOTES ORDER BY RANDOM() LIMIT 1;";
 
         return getQuote(query);
     }
 
-    public Quotes getQuotesById(int id) throws SQLException {
+    public Quote getQuotesById(int id) throws SQLException {
         String query = "SELECT * FROM QUOTES WHERE id=" + id;
 
         return getQuote(query);
     }
+
+    public void deleteQuotesById(int id) throws SQLException {
+        String query = "DELETE FROM QUOTES WHERE id=" + id;
+
+        executeQuery(query);
+    }
+
+    public void updateQuotesById(Quote quotes) throws SQLException {
+        String query = "UPDATE QUOTES set quote = ?, author = ? where id = ?";
+
+        executeQueryWithParams(query, new Object[]{quotes.getQuote(), quotes.getAuthor(), quotes.getId()});
+    }
+
 
     public void executeQuery(String query) throws SQLException {
         dm.connect();
@@ -60,19 +72,25 @@ public class QuotesRepository {
         dm.close();
     }
 
-    public List<Quotes> getQueryResults(String query) throws SQLException{
+    public void executeQueryWithParams(String query, Object[] params) throws SQLException{
         dm.connect();
-        List<Quotes> quotes = dm.getQueryDataList(query);
+        dm.executePSWithParams(query, params);
         dm.close();
-
-        return quotes;
     }
 
-    public Quotes getQuote(String query) throws SQLException {
+    public List<Quote> getQueryResults(String query) throws SQLException{
         dm.connect();
-        Quotes quotes = dm.getQueryDataList(query).get(0);
+        List<Quote> quotes = dm.getResultSet(query);
         dm.close();
 
-        return quotes;
+        return  quotes;
+    }
+
+    public Quote getQuote(String query) throws SQLException {
+        dm.connect();
+        Quote quote= dm.getResultSet(query).get(0);
+        dm.close();
+
+        return quote;
     }
 }

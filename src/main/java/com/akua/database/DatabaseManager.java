@@ -1,7 +1,7 @@
 package com.akua.database;
 
 import com.akua.database.configuration.PostgresDatabaseConnection;
-import com.akua.domain.Quotes;
+import com.akua.domain.Quote;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -24,26 +24,40 @@ public class DatabaseManager {
         conn.close();
     }
 
-    public PreparedStatement getPreparedStatement(String sql) throws SQLException {
-        return conn.prepareStatement(sql);
+    public PreparedStatement getPreparedStatement(String query) throws SQLException {
+        return conn.prepareStatement(query);
+    }
+
+    public PreparedStatement getPreparedStatementWithParams(String query, Object[] params) throws SQLException {
+        PreparedStatement ps = conn.prepareStatement(query);
+
+        for(int i = 0; i < params.length; i++){
+            ps.setObject(i + 1, params[i]);
+        }
+
+        return ps;
     }
 
     public boolean executePS(String query) throws SQLException {
         return getPreparedStatement(query).execute();
     }
 
-    public List<Quotes> getQueryDataList(String query) throws SQLException{
+    public boolean executePSWithParams(String query, Object[] params) throws SQLException{
+        return getPreparedStatementWithParams(query, params).execute();
+    }
+
+    public List<Quote> getResultSet(String query) throws SQLException{
         ResultSet rs = getPreparedStatement(query).executeQuery();
 
         return resultSetToOArrayList(rs);
     }
 
     // Make Function Generic AGAIN !!!
-    public List<Quotes> resultSetToOArrayList(ResultSet rs) throws SQLException {
-        List<Quotes> dataList = new ArrayList<>();
+    public List<Quote> resultSetToOArrayList(ResultSet rs) throws SQLException {
+        List<Quote> dataList = new ArrayList<>();
 
         while( rs.next() ){
-            Quotes q = new Quotes();
+            Quote q = new Quote();
 
             q.setId(rs.getInt("id"));
             q.setAuthor(rs.getString("author"));
