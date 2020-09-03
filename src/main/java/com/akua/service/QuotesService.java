@@ -5,7 +5,6 @@ import com.akua.repository.QuotesRepository;
 import com.akua.utils.Jsons;
 import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
-import com.sun.org.apache.xpath.internal.operations.Quo;
 
 import java.io.FileNotFoundException;
 import java.lang.reflect.Type;

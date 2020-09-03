@@ -4,7 +4,6 @@ import com.akua.database.DatabaseManager;
 import com.akua.domain.Quote;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class QuotesRepository {
